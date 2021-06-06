@@ -100,12 +100,15 @@ namespace MultiplayerExtensions.OverrideClasses
                 ILobbyPlayerDataModel localPlayerDataModel = _lobbyPlayersDataModel.GetLobbyPlayerDataModel(_lobbyPlayersDataModel.localUserId);
                 IEnumerable<ILobbyPlayerDataModel> validDataModels = _lobbyPlayersDataModel.playersData.Values.Where(data => data.beatmapLevel != null);
                 ILobbyPlayerDataModel chosenPlayerDataModel = validDataModels.ElementAt(new Random().Next(0, validDataModels.Count()));
+
                 localPlayerDataModel.beatmapLevel = chosenPlayerDataModel.beatmapLevel;
                 localPlayerDataModel.beatmapDifficulty = chosenPlayerDataModel.beatmapDifficulty;
                 localPlayerDataModel.beatmapCharacteristic = chosenPlayerDataModel.beatmapCharacteristic;
                 localPlayerDataModel.gameplayModifiers = chosenPlayerDataModel.gameplayModifiers;
+
                 _menuRpcManager.SelectBeatmap(new BeatmapIdentifierNetSerializable(chosenPlayerDataModel.beatmapLevel.levelID, chosenPlayerDataModel.beatmapCharacteristic.serializedName, chosenPlayerDataModel.beatmapDifficulty));
                 _menuRpcManager.SelectGameplayModifiers(chosenPlayerDataModel.gameplayModifiers);
+
                 if (_lobbyPlayersDataModel is LobbyPlayersDataModel playersDataModel)
                     playersDataModel.NotifyModelChange(_lobbyPlayersDataModel.localUserId);
             }

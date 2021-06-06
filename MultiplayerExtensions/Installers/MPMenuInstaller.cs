@@ -24,6 +24,9 @@ namespace MultiplayerExtensions.Installers
             ClientLobbySetupViewController clientViewController = Container.Resolve<ClientLobbySetupViewController>();
             Container.InstantiateComponent<ClientLobbySetupPanel>(clientViewController.gameObject);
 
+            QuickPlaySetupViewController quickPlayViewController = Container.Resolve<QuickPlaySetupViewController>();
+            Container.InstantiateComponent<QuickPlaySetupPanel>(quickPlayViewController.gameObject);
+
             CenterStageScreenController centerScreenController = Container.Resolve<CenterStageScreenController>();
             Container.InstantiateComponent<CenterScreenLoadingPanel>(centerScreenController.gameObject);
 

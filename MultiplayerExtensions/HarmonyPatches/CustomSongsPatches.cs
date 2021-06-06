@@ -17,7 +17,7 @@ namespace MultiplayerExtensions.HarmonyPatches
         /// </summary>
         static bool Prefix(ref bool __result)
         {
-            __result = MPState.CurrentGameType == MultiplayerGameType.Private && MPState.CustomSongsEnabled;
+            __result = MPState.CustomSongsEnabled;
             return false;
         }
     }

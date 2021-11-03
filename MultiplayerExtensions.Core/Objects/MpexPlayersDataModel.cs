@@ -45,7 +45,7 @@ namespace MultiplayerExtensions.Core.Objects
         {
             _logger.Debug($"'{player.userId}' selected song '{packet.levelHash}'.");
             BeatmapCharacteristicSO characteristic = _beatmapCharacteristicCollection.GetBeatmapCharacteristicBySerializedName(packet.characteristic);
-            MpexPreviewBeatmapLevel preview = new PacketPreviewBeatmapLevel(packet);
+            MpexPreviewBeatmapLevel preview = new PacketPreviewBeatmapLevel(packet, _beatsaver);
             base.SetPlayerBeatmapLevel(player.userId, preview, packet.difficulty, characteristic);
         }
 
@@ -66,7 +66,7 @@ namespace MultiplayerExtensions.Core.Objects
             base.HandleMenuRpcManagerRecommendBeatmap(userId, beatmapId);
         }
 
-        public override async void SetLocalPlayerBeatmapLevel(string levelId, BeatmapDifficulty beatmapDifficulty, BeatmapCharacteristicSO characteristic)
+        public override void SetLocalPlayerBeatmapLevel(string levelId, BeatmapDifficulty beatmapDifficulty, BeatmapCharacteristicSO characteristic)
         {
             string? levelHash = SongCore.Collections.hashForLevelID(levelId);
             if (string.IsNullOrEmpty(levelHash))
@@ -74,11 +74,11 @@ namespace MultiplayerExtensions.Core.Objects
                 MpexPreviewBeatmapLevel? mpexBeatmapLevel = null;
                 IPreviewBeatmapLevel? localBeatmapLevel = SongCore.Loader.GetLevelById(levelId);
                 if (localBeatmapLevel != null)
-                    mpexBeatmapLevel = new LocalPreviewBeatmapLevel(levelHash, localBeatmapLevel);
+                    mpexBeatmapLevel = new LocalPreviewBeatmapLevel(localBeatmapLevel, _beatsaver);
                 if (mpexBeatmapLevel == null)
                     mpexBeatmapLevel = GetExistingPreviewBeatmap(levelId);
                 if (mpexBeatmapLevel == null)
-                    mpexBeatmapLevel = await FetchBeatSaverPreviewBeatmap(levelHash);
+                    mpexBeatmapLevel = new BeatSaverPreviewBeatmapLevel(levelHash, _beatsaver);
                 if (mpexBeatmapLevel == null)
                     return;
 
@@ -96,22 +96,6 @@ namespace MultiplayerExtensions.Core.Objects
             if (preview is MpexPreviewBeatmapLevel previewBeatmap)
                 return previewBeatmap;
             return null;
-        }
-
-        private async Task<MpexPreviewBeatmapLevel?> FetchBeatSaverPreviewBeatmap(string levelHash)
-        {
-            try
-            {
-                Beatmap? beatmap = await _beatsaver.BeatmapByHash(levelHash);
-                if (beatmap != null)
-                    return new BeatSaverPreviewBeatmapLevel(levelHash, beatmap);
-                return null;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                return null;
-            }
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Zenject;
 
-namespace MultiplayerExtensions.Core.HarmonyPatches
+namespace MultiplayerExtensions.Core.Patches
 {
     [HarmonyPatch(typeof(MainSystemInit), nameof(MainSystemInit.InstallBindings), MethodType.Normal)]
     internal class MainSystemBinderPatch

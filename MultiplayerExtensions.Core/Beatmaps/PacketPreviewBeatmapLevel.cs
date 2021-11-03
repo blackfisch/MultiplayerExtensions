@@ -1,4 +1,6 @@
-﻿namespace MultiplayerExtensions.Core.Beatmaps
+﻿using BeatSaverSharp;
+
+namespace MultiplayerExtensions.Core.Beatmaps
 {
     class PacketPreviewBeatmapLevel : MpexPreviewBeatmapLevel
     {
@@ -11,7 +13,8 @@
 
         private readonly MpexBeatmapPacket _packet;
 
-        public PacketPreviewBeatmapLevel(MpexBeatmapPacket packet) : base(packet.levelHash)
+        public PacketPreviewBeatmapLevel(MpexBeatmapPacket packet, BeatSaver beatsaver) 
+            : base(packet.levelHash, beatsaver)
         {
             _packet = packet;
         }

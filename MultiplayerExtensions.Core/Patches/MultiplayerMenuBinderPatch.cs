@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Zenject;
 
-namespace MultiplayerExtensions.Core.HarmonyPatches
+namespace MultiplayerExtensions.Core.Patches
 {
     [HarmonyPatch(typeof(MultiplayerMenuInstaller), nameof(MultiplayerMenuInstaller.InstallBindings), MethodType.Normal)]
     internal class MultiplayerMenuBinderPatch

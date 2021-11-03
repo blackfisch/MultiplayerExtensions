@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using BeatSaverSharp;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ namespace MultiplayerExtensions.Core.Beatmaps
 
         private IPreviewBeatmapLevel _preview;
 
-        public LocalPreviewBeatmapLevel(string hash, IPreviewBeatmapLevel preview) : base(hash)
+        public LocalPreviewBeatmapLevel(IPreviewBeatmapLevel preview, BeatSaver beatsaver) : base(SongCore.Collections.hashForLevelID(preview.levelID), beatsaver)
         {
             _preview = preview;
         }

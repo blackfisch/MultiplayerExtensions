@@ -147,7 +147,7 @@ namespace MultiplayerExtensions.Core.Helpers
                         }
                     }
                 }
-                catch (Exception cleanUpException)
+                catch (Exception)
                 {
                     // Failed at cleanup
                 }

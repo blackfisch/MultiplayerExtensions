@@ -117,7 +117,7 @@ namespace MultiplayerExtensions.Core.Objects
                     SongCore.Loader.Instance.RefreshSongs(false);
                     await awaiter.Task;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     throw;
                 }

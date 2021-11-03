@@ -10,7 +10,6 @@ namespace MultiplayerExtensions.Core.Beatmaps
 {
     class MpexBeatmapPacket : MpexPacket<MpexBeatmapPacket>
     {
-        public string levelId = null!;
         public string levelHash = null!;
         public string songName = null!;
         public string songSubName = null!;
@@ -26,7 +25,6 @@ namespace MultiplayerExtensions.Core.Beatmaps
 
         public MpexBeatmapPacket(MpexPreviewBeatmapLevel preview, string characteristic, BeatmapDifficulty difficulty)
         {
-            levelId = preview.levelID;
             levelHash = preview.levelHash;
             songName = preview.songName;
             songSubName = preview.songSubName;
@@ -41,7 +39,6 @@ namespace MultiplayerExtensions.Core.Beatmaps
 
         public override void Serialize(NetDataWriter writer)
         {
-            writer.Put(levelId);
             writer.Put(levelHash);
             writer.Put(songName);
             writer.Put(songSubName);
@@ -56,7 +53,6 @@ namespace MultiplayerExtensions.Core.Beatmaps
 
         public override void Deserialize(NetDataReader reader)
         {
-            levelId = reader.GetString();
             levelHash = reader.GetString();
             songName = reader.GetString();
             songSubName = reader.GetString();

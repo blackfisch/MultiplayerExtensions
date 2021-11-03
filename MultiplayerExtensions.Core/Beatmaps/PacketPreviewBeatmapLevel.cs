@@ -2,26 +2,18 @@
 {
     class PacketPreviewBeatmapLevel : MpexPreviewBeatmapLevel
     {
-        public override string levelID { get; protected set; }
-        public override string levelHash { get; protected set; }
+        public override string songName => _packet.songName;
+        public override string songSubName => _packet.songSubName;
+        public override string songAuthorName => _packet.songAuthorName;
+        public override string levelAuthorName => _packet.levelAuthorName;
+        public override float beatsPerMinute => _packet.beatsPerMinute;
+        public override float songDuration => _packet.songDuration;
 
-        public override string songName { get; protected set; }
-        public override string songSubName { get; protected set; }
-        public override string songAuthorName { get; protected set; }
-        public override string levelAuthorName { get; protected set; }
+        private readonly MpexBeatmapPacket _packet;
 
-        public PacketPreviewBeatmapLevel(MpexBeatmapPacket packet)
+        public PacketPreviewBeatmapLevel(MpexBeatmapPacket packet) : base(packet.levelHash)
         {
-            levelID = packet.levelId;
-            levelHash = packet.levelHash;
-
-            songName = packet.songName;
-            songSubName = packet.songSubName;
-            songAuthorName = packet.songAuthorName;
-            levelAuthorName = packet.levelAuthorName;
-
-            beatsPerMinute = packet.beatsPerMinute;
-            songDuration = packet.songDuration;
+            _packet = packet;
         }
     }
 }

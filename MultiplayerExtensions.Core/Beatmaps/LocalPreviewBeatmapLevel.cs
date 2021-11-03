@@ -6,36 +6,28 @@ namespace MultiplayerExtensions.Core.Beatmaps
 {
     class LocalPreviewBeatmapLevel : MpexPreviewBeatmapLevel
     {
+        public override string levelID => _preview.levelID;
+        public override string songName => _preview.songName;
+        public override string songSubName => _preview.songSubName;
+        public override string songAuthorName => _preview.songAuthorName;
+        public override string levelAuthorName => _preview.levelAuthorName;
+        public override float beatsPerMinute => _preview.beatsPerMinute;
+        public override float songDuration => _preview.songDuration;
+        public override float previewStartTime => _preview.previewStartTime;
+        public override float previewDuration => _preview.previewDuration;
+        public override PreviewDifficultyBeatmapSet[] previewDifficultyBeatmapSets => _preview.previewDifficultyBeatmapSets;
+
         private IPreviewBeatmapLevel _preview;
 
-        public override string levelID { get; protected set; }
-        public override string levelHash { get; protected set; }
-
-        public override string songName { get; protected set; }
-        public override string songSubName { get; protected set; }
-        public override string songAuthorName { get; protected set; }
-        public override string levelAuthorName { get; protected set; }
-
-        public LocalPreviewBeatmapLevel(string id, string hash, IPreviewBeatmapLevel preview)
+        public LocalPreviewBeatmapLevel(string hash, IPreviewBeatmapLevel preview) : base(hash)
         {
             _preview = preview;
-
-            levelID = id;
-            levelHash = hash;
-
-            songName = preview.songName;
-            songSubName = preview.songSubName;
-            songAuthorName = preview.songAuthorName;
-            levelAuthorName = preview.levelAuthorName;
-            beatsPerMinute = preview.beatsPerMinute;
-            songDuration = preview.songDuration;
-
-            previewStartTime = preview.previewStartTime;
-            previewDuration = preview.previewDuration;
-            previewDifficultyBeatmapSets = preview.previewDifficultyBeatmapSets;
         }
 
         public override Task<Sprite> GetCoverImageAsync(CancellationToken cancellationToken)
             => _preview.GetCoverImageAsync(cancellationToken);
+
+        public override Task<AudioClip> GetPreviewAudioClipAsync(CancellationToken cancellationToken)
+            => _preview.GetPreviewAudioClipAsync(cancellationToken);
     }
 }

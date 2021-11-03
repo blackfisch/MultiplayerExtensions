@@ -1,35 +1,40 @@
-﻿using MultiplayerExtensions.Core.Beatmaps;
+﻿using BeatSaverSharp;
+using BeatSaverSharp.Models;
+using MultiplayerExtensions.Core.Beatmaps;
 using MultiplayerExtensions.Core.Packets;
 using SiraUtil.Logging;
+using SiraUtil.Zenject;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MultiplayerExtensions.Core.Objects
 {
     public class MpexPlayersDataModel : LobbyPlayersDataModel, ILobbyPlayersDataModel, IDisposable
     {
         private readonly MpexPacketSerializer _packetSerializer;
+        private readonly BeatSaver _beatsaver;
         private readonly SiraLog _logger;
 
         internal MpexPlayersDataModel(
             MpexPacketSerializer packetSerializer,
+            UBinder<Plugin, BeatSaver> beatsaver,
             SiraLog logger)
         {
             _packetSerializer = packetSerializer;
+            _beatsaver = beatsaver.Value;
             _logger = logger;
         }
 
         public override void Activate()
         {
             _packetSerializer.RegisterCallback<MpexBeatmapPacket>(HandleMpexBeatmapPacket);
-
             base.Activate();
         }
 
         public override void Deactivate()
         {
             _packetSerializer.UnregisterCallback<MpexBeatmapPacket>();
-
             base.Deactivate();
         }
 
@@ -61,7 +66,7 @@ namespace MultiplayerExtensions.Core.Objects
             base.HandleMenuRpcManagerRecommendBeatmap(userId, beatmapId);
         }
 
-        public override void SetLocalPlayerBeatmapLevel(string levelId, BeatmapDifficulty beatmapDifficulty, BeatmapCharacteristicSO characteristic)
+        public override async void SetLocalPlayerBeatmapLevel(string levelId, BeatmapDifficulty beatmapDifficulty, BeatmapCharacteristicSO characteristic)
         {
             string? levelHash = SongCore.Collections.hashForLevelID(levelId);
             if (string.IsNullOrEmpty(levelHash))
@@ -69,9 +74,11 @@ namespace MultiplayerExtensions.Core.Objects
                 MpexPreviewBeatmapLevel? mpexBeatmapLevel = null;
                 IPreviewBeatmapLevel? localBeatmapLevel = SongCore.Loader.GetLevelById(levelId);
                 if (localBeatmapLevel != null)
-                    mpexBeatmapLevel = new LocalPreviewBeatmapLevel(levelId, levelHash, localBeatmapLevel);
+                    mpexBeatmapLevel = new LocalPreviewBeatmapLevel(levelHash, localBeatmapLevel);
                 if (mpexBeatmapLevel == null)
                     mpexBeatmapLevel = GetExistingPreviewBeatmap(levelId);
+                if (mpexBeatmapLevel == null)
+                    mpexBeatmapLevel = await FetchBeatSaverPreviewBeatmap(levelHash);
                 if (mpexBeatmapLevel == null)
                     return;
 
@@ -89,6 +96,22 @@ namespace MultiplayerExtensions.Core.Objects
             if (preview is MpexPreviewBeatmapLevel previewBeatmap)
                 return previewBeatmap;
             return null;
+        }
+
+        private async Task<MpexPreviewBeatmapLevel?> FetchBeatSaverPreviewBeatmap(string levelHash)
+        {
+            try
+            {
+                Beatmap? beatmap = await _beatsaver.BeatmapByHash(levelHash);
+                if (beatmap != null)
+                    return new BeatSaverPreviewBeatmapLevel(levelHash, beatmap);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                return null;
+            }
         }
     }
 }

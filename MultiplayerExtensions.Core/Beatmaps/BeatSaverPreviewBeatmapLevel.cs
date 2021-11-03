@@ -8,33 +8,20 @@ namespace MultiplayerExtensions.Core.Beatmaps
 {
     class BeatSaverPreviewBeatmapLevel : MpexPreviewBeatmapLevel
     {
+        public override string songName => _beatmap.Metadata.SongName;
+        public override string songSubName => _beatmap.Metadata.SongSubName;
+        public override string songAuthorName => _beatmap.Metadata.SongAuthorName;
+        public override string levelAuthorName => _beatmap.Metadata.LevelAuthorName;
+        public override float beatsPerMinute => _beatmap.Metadata.BPM;
+        public override float songDuration => _beatmap.Metadata.Duration;
+
         private Beatmap _beatmap;
         private BeatmapVersion _beatmapVersion;
 
-        public override string levelID { get; protected set; }
-        public override string levelHash { get; protected set; }
-
-        public override string songName { get; protected set; }
-        public override string songSubName { get; protected set; }
-        public override string songAuthorName { get; protected set; }
-        public override string levelAuthorName { get; protected set; }
-
-        public BeatSaverPreviewBeatmapLevel(string id, string hash, Beatmap beatmap)
+        public BeatSaverPreviewBeatmapLevel(string hash, Beatmap beatmap) : base(hash)
         {
             _beatmap = beatmap;
             _beatmapVersion = beatmap.Versions.FirstOrDefault(v => v.Hash == hash);
-
-            levelID = id;
-            levelHash = hash;
-
-            songName = beatmap.Metadata.SongName;
-            songSubName = beatmap.Metadata.SongSubName;
-            songAuthorName = beatmap.Metadata.SongAuthorName;
-            levelAuthorName = beatmap.Metadata.LevelAuthorName;
-            beatsPerMinute = beatmap.Metadata.BPM;
-            songDuration = beatmap.Metadata.Duration;
-
-            // TODO: Populate previewDifficultyBeatmapSets
         }
 
         public override async Task<Sprite> GetCoverImageAsync(CancellationToken cancellationToken)

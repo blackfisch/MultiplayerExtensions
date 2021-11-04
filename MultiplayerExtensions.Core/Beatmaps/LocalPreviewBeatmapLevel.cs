@@ -20,7 +20,8 @@ namespace MultiplayerExtensions.Core.Beatmaps
 
         private IPreviewBeatmapLevel _preview;
 
-        public LocalPreviewBeatmapLevel(IPreviewBeatmapLevel preview, BeatSaver beatsaver) : base(SongCore.Collections.hashForLevelID(preview.levelID), beatsaver)
+        public LocalPreviewBeatmapLevel(IPreviewBeatmapLevel preview, BeatSaver beatsaver) 
+            : base(SongCore.Collections.hashForLevelID(preview.levelID), beatsaver)
         {
             _preview = preview;
         }

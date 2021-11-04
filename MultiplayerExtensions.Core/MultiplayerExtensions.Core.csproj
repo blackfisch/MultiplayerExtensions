@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<AppDesignerFolder>Properties</AppDesignerFolder>
-		<AssemblyName>MultiplayerExtensions</AssemblyName>
+		<AssemblyName>MultiplayerExtensions.Core</AssemblyName>
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<TargetFramework>net472</TargetFramework>
 		<DebugSymbols>true</DebugSymbols>

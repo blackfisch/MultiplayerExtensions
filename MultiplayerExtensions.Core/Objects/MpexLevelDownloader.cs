@@ -73,6 +73,7 @@ namespace MultiplayerExtensions.Core.Objects
             {
                 await DownloadLevel(levelHash, cancellationToken, progress);
                 _logger.Debug($"(LevelDownloader) Download finished: {levelId}");
+                _downloads.TryRemove(levelId, out _);
                 return true;
             }
             catch (OperationCanceledException)

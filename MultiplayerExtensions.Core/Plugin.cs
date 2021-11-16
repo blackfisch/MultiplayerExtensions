@@ -4,7 +4,6 @@ using IPA;
 using IPA.Config;
 using IPA.Loader;
 using IPA.Logging;
-using MultiplayerExtensions.Core.HarmonyPatches;
 using MultiplayerExtensions.Core.Installers;
 using SiraUtil.Zenject;
 using System;

@@ -11,7 +11,7 @@ namespace MultiplayerExtensions.Core.Patchers
     public class PlayerCountPatcher : IAffinity
     {
         public int MinPlayers { get; set; } = 2;
-        public int MaxPlayers { get; set; } = 10;
+        public int MaxPlayers { get; set; } = 5;
         public bool AddEmptyPlayerSlotForEvenCount { get; set; } = false;
 
         private readonly SiraLog _logger;

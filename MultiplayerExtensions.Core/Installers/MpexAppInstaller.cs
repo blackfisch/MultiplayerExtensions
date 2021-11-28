@@ -26,6 +26,8 @@ namespace MultiplayerExtensions.Core.Installers
             Container.Bind<MpexBeatmapLevelProvider>().ToSelf().AsSingle();
             Container.BindInterfacesAndSelfTo<CustomLevelsPatcher>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerCountPatcher>().AsSingle();
+            Container.BindInterfacesAndSelfTo<LoggingPatcher>().AsSingle();
+            Container.Bind<BGNetLogger>().ToSelf().AsSingle();
         }
     }
 }

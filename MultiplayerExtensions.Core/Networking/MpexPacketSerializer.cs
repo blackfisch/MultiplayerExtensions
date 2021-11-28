@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Zenject;
 
-namespace MultiplayerExtensions.Core.Packets
+namespace MultiplayerExtensions.Core.Networking
 {
     class MpexPacketSerializer : INetworkPacketSubSerializer<IConnectedPlayer>, IInitializable, IDisposable
     {
@@ -37,7 +37,7 @@ namespace MultiplayerExtensions.Core.Packets
         /// <param name="packet">The packet to serialize</param>
         public void Serialize(NetDataWriter writer, INetSerializable packet)
         {
-            writer.Put(packet.GetType().ToString());
+            writer.Put(packet.GetType().Name);
             packet.Serialize(writer);
         }
 
@@ -118,7 +118,7 @@ namespace MultiplayerExtensions.Core.Packets
                 return packet!;
             };
 
-            packetHandlers[typeof(TPacket).ToString()] = delegate (NetDataReader reader, int size, IConnectedPlayer player)
+            packetHandlers[typeof(TPacket).Name] = delegate (NetDataReader reader, int size, IConnectedPlayer player)
             {
                 callback(deserialize(reader, size), player);
             };

@@ -1,6 +1,7 @@
 ﻿using BeatSaverSharp;
+using MultiplayerExtensions.Core.Beatmaps.Providers;
+using MultiplayerExtensions.Core.Networking;
 using MultiplayerExtensions.Core.Objects;
-using MultiplayerExtensions.Core.Packets;
 using SiraUtil.Zenject;
 using Zenject;
 
@@ -21,6 +22,7 @@ namespace MultiplayerExtensions.Core.Installers
             Container.BindInstance(new UBinder<Plugin, BeatSaver>(_beatsaver)).AsSingle();
             Container.Bind<MpexPacketSerializer>().ToSelf().AsSingle();
             Container.Bind<MpexLevelDownloader>().ToSelf().AsSingle();
+            Container.Bind<MpexBeatmapLevelProvider>().ToSelf().AsSingle();
         }
     }
 }

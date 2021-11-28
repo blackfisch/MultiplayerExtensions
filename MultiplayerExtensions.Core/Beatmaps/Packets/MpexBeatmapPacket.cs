@@ -1,14 +1,10 @@
 ﻿using LiteNetLib.Utils;
-using MultiplayerExtensions.Core.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MultiplayerExtensions.Core.Beatmaps.Abstractions;
+using MultiplayerExtensions.Core.Networking.Abstractions;
 
-namespace MultiplayerExtensions.Core.Beatmaps
+namespace MultiplayerExtensions.Core.Beatmaps.Packets
 {
-    class MpexBeatmapPacket : MpexPacket<MpexBeatmapPacket>
+    public class MpexBeatmapPacket : MpexPacket<MpexBeatmapPacket>
     {
         public string levelHash = null!;
         public string songName = null!;
@@ -23,9 +19,9 @@ namespace MultiplayerExtensions.Core.Beatmaps
 
         public MpexBeatmapPacket() { }
 
-        public MpexBeatmapPacket(MpexPreviewBeatmapLevel preview, string characteristic, BeatmapDifficulty difficulty)
+        public MpexBeatmapPacket(IPreviewBeatmapLevel preview, string characteristic, BeatmapDifficulty difficulty)
         {
-            levelHash = preview.levelHash;
+            levelHash = SongCore.Collections.hashForLevelID(preview.levelID);
             songName = preview.songName;
             songSubName = preview.songSubName;
             songAuthorName = preview.songAuthorName;

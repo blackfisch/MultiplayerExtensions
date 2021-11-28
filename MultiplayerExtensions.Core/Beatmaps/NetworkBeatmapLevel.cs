@@ -1,9 +1,16 @@
 ﻿using BeatSaverSharp;
+using MultiplayerExtensions.Core.Beatmaps.Abstractions;
+using MultiplayerExtensions.Core.Beatmaps.Packets;
+using System.Threading;
+using System.Threading.Tasks;
+using UnityEngine;
 
 namespace MultiplayerExtensions.Core.Beatmaps
 {
-    class PacketPreviewBeatmapLevel : MpexPreviewBeatmapLevel
+    class NetworkBeatmapLevel : MpexBeatmapLevel
     {
+        public override string levelHash { get; protected set; }
+
         public override string songName => _packet.songName;
         public override string songSubName => _packet.songSubName;
         public override string songAuthorName => _packet.songAuthorName;
@@ -13,9 +20,9 @@ namespace MultiplayerExtensions.Core.Beatmaps
 
         private readonly MpexBeatmapPacket _packet;
 
-        public PacketPreviewBeatmapLevel(MpexBeatmapPacket packet, BeatSaver beatsaver) 
-            : base(packet.levelHash, beatsaver)
+        public NetworkBeatmapLevel(MpexBeatmapPacket packet)
         {
+            levelHash = packet.levelHash;
             _packet = packet;
         }
     }

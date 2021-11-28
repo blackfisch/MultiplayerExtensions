@@ -77,7 +77,7 @@ namespace MultiplayerExtensions.Core.Networking
         /// Method the base game uses to see if this serializer can handle a type.
         /// </summary>
         /// <param name="type">The type to be handled</param>
-        /// <returns></returns>
+        /// <returns>Whether this serializer can handle the type</returns>
         public bool HandlesType(Type type)
         {
             return registeredTypes.Contains(type);
@@ -122,6 +122,8 @@ namespace MultiplayerExtensions.Core.Networking
             {
                 callback(deserialize(reader, size), player);
             };
+
+            _logger.Debug($"(PacketSerializer) Registered packet '{typeof(TPacket).Name}'.");
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using BeatSaverSharp;
+using BeatSaverSharp;
 using HarmonyLib;
 using IPA;
 using IPA.Config;
@@ -31,6 +31,7 @@ namespace MultiplayerExtensions.Core
 			zenjector.UseHttpService();
 			zenjector.UseSiraSync(SiraUtil.Web.SiraSync.SiraSyncServiceType.GitHub, "Goobwabber", "MultiplayerExtensions");
 			zenjector.Install<MpexAppInstaller>(Location.App, _beatsaver);
+			zenjector.Install<MpexMenuInstaller>(Location.Menu);
 		}
 
 		[OnEnable]

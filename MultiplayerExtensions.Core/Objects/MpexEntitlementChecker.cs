@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
+using Zenject;
 
 namespace MultiplayerExtensions.Core.Objects
 {
@@ -17,15 +18,20 @@ namespace MultiplayerExtensions.Core.Objects
 		private ConcurrentDictionary<string, ConcurrentDictionary<string, TaskCompletionSource<EntitlementsStatus>>> _tcsDictionary = new();
 
 		private readonly IMultiplayerSessionManager _sessionManager;
-		private readonly BeatSaver _beatsaver;
-		private readonly SiraLog _logger;
+		private BeatSaver _beatsaver = null!;
+		private SiraLog _logger = null!;
 
 		internal MpexEntitlementChecker(
-			IMultiplayerSessionManager sessionManager, 
-			UBinder<Plugin, BeatSaver> beatsaver, 
-			SiraLog logger)
+			IMultiplayerSessionManager sessionManager)
 		{
 			_sessionManager = sessionManager;
+		}
+
+		[Inject]
+		internal void Inject(
+			[InjectOptional] UBinder<Plugin, BeatSaver> beatsaver,
+			[InjectOptional] SiraLog logger)
+        {
 			_beatsaver = beatsaver.Value;
 			_logger = logger;
 		}

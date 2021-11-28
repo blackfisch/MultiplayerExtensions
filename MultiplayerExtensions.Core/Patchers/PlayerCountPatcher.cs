@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using SiraUtil.Affinity;
+using SiraUtil.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -10,15 +11,24 @@ namespace MultiplayerExtensions.Core.Patchers
     public class PlayerCountPatcher : IAffinity
     {
         public int MinPlayers { get; set; } = 2;
-        public int MaxPlayers { get; set; } = 5;
+        public int MaxPlayers { get; set; } = 10;
         public bool AddEmptyPlayerSlotForEvenCount { get; set; } = false;
+
+        private readonly SiraLog _logger;
+
+        internal PlayerCountPatcher(
+            SiraLog logger)
+        {
+            _logger = logger;
+        }
 
         [AffinityPrefix]
         [AffinityPatch(typeof(CreateServerFormController), nameof(CreateServerFormController.Setup))]
-        private void CreateServerFormSetup(ref int selectedNumberOfPlayers, FormattedFloatListSettingsController ____maxPlayersList, int ____kMinPlayers, int ____kMaxPlayers)
+        private void CreateServerFormSetup(ref int selectedNumberOfPlayers, FormattedFloatListSettingsController ____maxPlayersList)
         {
+            _logger.Debug($"Creating server form with player clamp between '{MinPlayers}' and '{MaxPlayers}'");
             selectedNumberOfPlayers = Mathf.Clamp(selectedNumberOfPlayers, MinPlayers, MaxPlayers);
-            ____maxPlayersList.values = Enumerable.Range(MinPlayers, MaxPlayers - MinPlayers + 1).Cast<float>().ToArray();
+            ____maxPlayersList.values = Enumerable.Range(MinPlayers, MaxPlayers - MinPlayers + 1).Select(x => (float)x).ToArray();
         }
 
         [AffinityTranspiler]
@@ -30,7 +40,7 @@ namespace MultiplayerExtensions.Core.Patchers
             {
                 if (codes[i].opcode == OpCodes.Ldc_R4 && codes[i + 1].opcode == OpCodes.Ldc_R4)
                 {
-                    codes[i + 2] = new CodeInstruction(OpCodes.Call, SymbolExtensions.GetMethodInfo(() => ClampFloatAttacher(0, 0, 0)));
+                    codes[i + 2] = new CodeInstruction(OpCodes.Call, SymbolExtensions.GetMethodInfo(() => ClampFloatAttacher(0f, 0f, 0f)));
                 }
             }
             return codes.AsEnumerable();
@@ -43,7 +53,7 @@ namespace MultiplayerExtensions.Core.Patchers
             var codes = instructions.ToList();
             int divStartIndex = codes.FindIndex(code => code.opcode == OpCodes.Ldc_R4 && code.OperandIs(360));
             if (!AddEmptyPlayerSlotForEvenCount && divStartIndex != -1)
-                codes.RemoveRange(0, divStartIndex + 1);
+                codes.RemoveRange(0, divStartIndex);
             return codes.AsEnumerable();
         }
 
@@ -60,7 +70,7 @@ namespace MultiplayerExtensions.Core.Patchers
             return codes.AsEnumerable();
         }
 
-        private int ClampFloatAttacher(int value, int min, int max)
+        private static float ClampFloatAttacher(float value, float min, float max)
             => value;
     }
 }

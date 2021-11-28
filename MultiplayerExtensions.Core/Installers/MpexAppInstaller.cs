@@ -2,6 +2,7 @@
 using MultiplayerExtensions.Core.Beatmaps.Providers;
 using MultiplayerExtensions.Core.Networking;
 using MultiplayerExtensions.Core.Objects;
+using MultiplayerExtensions.Core.Patchers;
 using SiraUtil.Zenject;
 using Zenject;
 
@@ -23,6 +24,7 @@ namespace MultiplayerExtensions.Core.Installers
             Container.Bind<MpexPacketSerializer>().ToSelf().AsSingle();
             Container.Bind<MpexLevelDownloader>().ToSelf().AsSingle();
             Container.Bind<MpexBeatmapLevelProvider>().ToSelf().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerCountPatcher>().AsSingle();
         }
     }
 }

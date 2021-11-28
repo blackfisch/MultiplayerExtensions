@@ -8,6 +8,7 @@ namespace MultiplayerExtensions.Core.Installers
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<IntroAnimationPatcher>().AsSingle();
+            Container.BindInterfacesAndSelfTo<OutroAnimationPatcher>().AsSingle();
         }
     }
 }

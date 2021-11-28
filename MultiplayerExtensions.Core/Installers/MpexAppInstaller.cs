@@ -24,6 +24,7 @@ namespace MultiplayerExtensions.Core.Installers
             Container.Bind<MpexPacketSerializer>().ToSelf().AsSingle();
             Container.Bind<MpexLevelDownloader>().ToSelf().AsSingle();
             Container.Bind<MpexBeatmapLevelProvider>().ToSelf().AsSingle();
+            Container.BindInterfacesAndSelfTo<CustomLevelsPatcher>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerCountPatcher>().AsSingle();
         }
     }

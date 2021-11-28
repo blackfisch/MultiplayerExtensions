@@ -50,10 +50,10 @@ namespace MultiplayerExtensions.Core.Objects
         {
             Task<bool> task;
             if (_downloads.TryGetValue(levelId, out task))
-                _logger.Debug($"(LevelDownloader) Download already in progress: {levelId}");
+                _logger.Debug($"Download already in progress: {levelId}");
             if (task == null)
             {
-                _logger.Debug($"(LevelDownloader) Starting download: {levelId}");
+                _logger.Debug($"Starting download: {levelId}");
                 task = TryDownloadLevelInternal(levelId, cancellationToken, progress);
                 _downloads[levelId] = task;
             }
@@ -65,24 +65,24 @@ namespace MultiplayerExtensions.Core.Objects
             string levelHash = SongCore.Collections.hashForLevelID(levelId);
             if (string.IsNullOrEmpty(levelHash))
             {
-                _logger.Error($"(LevelDownloader) Could not parse hash from id {levelId}");
+                _logger.Error($"Could not parse hash from id {levelId}");
                 return false;
             }
 
             try
             {
                 await DownloadLevel(levelHash, cancellationToken, progress);
-                _logger.Debug($"(LevelDownloader) Download finished: {levelId}");
+                _logger.Debug($"Download finished: {levelId}");
                 _downloads.TryRemove(levelId, out _);
                 return true;
             }
             catch (OperationCanceledException)
             {
-                _logger.Debug($"(LevelDownloader) Download cancelled: {levelId}");
+                _logger.Debug($"Download cancelled: {levelId}");
             }
             catch (Exception ex)
             {
-                _logger.Error($"(LevelDownloader) Download failed: {levelId} {ex.Message}");
+                _logger.Error($"Download failed: {levelId} {ex.Message}");
                 _logger.Debug(ex);
             }
             return false;

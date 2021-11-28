@@ -107,7 +107,7 @@ namespace MultiplayerExtensions.Core.Networking
                 TPacket packet = ThreadStaticPacketPool<TPacket>.pool.Obtain();
                 if (packet == null)
                 {
-                    _logger.Error($"(PacketSerializer) Constructor for '{typeof(TPacket)}' returned null!");
+                    _logger.Error($"Constructor for '{typeof(TPacket)}' returned null!");
                     reader.SkipBytes(size);
                 }
                 else
@@ -123,7 +123,7 @@ namespace MultiplayerExtensions.Core.Networking
                 callback(deserialize(reader, size), player);
             };
 
-            _logger.Debug($"(PacketSerializer) Registered packet '{typeof(TPacket).Name}'.");
+            _logger.Debug($"Registered packet '{typeof(TPacket).Name}'.");
         }
 
         /// <summary>

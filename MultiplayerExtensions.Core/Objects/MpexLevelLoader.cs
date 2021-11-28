@@ -30,7 +30,7 @@ namespace MultiplayerExtensions.Core.Objects
         public override void LoadLevel(BeatmapIdentifierNetSerializable beatmapId, GameplayModifiers gameplayModifiers, float initialStartTime)
         {
             string levelHash = SongCore.Collections.hashForLevelID(beatmapId.levelID);
-            _logger.Debug($"(LevelLoader) Loading level {beatmapId.levelID}");
+            _logger.Debug($"Loading level {beatmapId.levelID}");
             base.LoadLevel(beatmapId, gameplayModifiers, initialStartTime);
             if (levelHash != null && !SongCore.Collections.songWithHashPresent(levelHash))
                 _getBeatmapLevelResultTask = DownloadBeatmapLevelAsync(beatmapId.levelID, _getBeatmapCancellationTokenSource.Token);
@@ -44,13 +44,13 @@ namespace MultiplayerExtensions.Core.Objects
             {
                 base.Tick();
                 if (_loaderState == MultiplayerBeatmapLoaderState.WaitingForCountdown)
-                    _logger.Debug($"(LevelLoader) Loaded level {_beatmapId.levelID}");
+                    _logger.Debug($"Loaded level {_beatmapId.levelID}");
             }
             else if (_loaderState == MultiplayerBeatmapLoaderState.WaitingForCountdown)
             {
                 if (_sessionManager.connectedPlayers.All(p => _entitlementChecker.GetUserEntitlementStatusWithoutRequest(p.userId, _beatmapId.levelID) == EntitlementsStatus.Ok))
                 {
-                    _logger.Debug($"(LevelLoader) All players finished loading");
+                    _logger.Debug($"All players finished loading");
                     base.Tick();
                 }
             }

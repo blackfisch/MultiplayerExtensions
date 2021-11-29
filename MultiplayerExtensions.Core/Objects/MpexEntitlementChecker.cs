@@ -2,11 +2,15 @@
 using BeatSaverSharp.Models;
 using SiraUtil.Logging;
 using SiraUtil.Zenject;
+using SongCore.Data;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Zenject;
+using static SongCore.Data.ExtraSongData;
 
 namespace MultiplayerExtensions.Core.Objects
 {
@@ -89,13 +93,35 @@ namespace MultiplayerExtensions.Core.Objects
 				return base.GetEntitlementStatus(levelId);
 
 			if (SongCore.Collections.songWithHashPresent(levelHash))
-				return Task.FromResult(EntitlementsStatus.Ok);
+            {
+				ExtraSongData? extraSongData = SongCore.Collections.RetrieveExtraSongData(levelHash);
+				if (extraSongData == null)
+					return Task.FromResult(EntitlementsStatus.Ok);
+
+				string[] requirements = extraSongData._difficulties
+					.Aggregate(Array.Empty<string>(), (a, n) => a.Concat(n.additionalDifficultyData?._requirements ?? Array.Empty<string>()).ToArray())
+					.Distinct().ToArray();
+
+				bool hasRequirements = requirements.All(x => SongCore.Collections.capabilities.Contains(x));
+				return Task.FromResult(hasRequirements ? EntitlementsStatus.Ok : EntitlementsStatus.NotOwned);
+            }
+
 			return _beatsaver.BeatmapByHash(levelHash).ContinueWith<EntitlementsStatus>(r =>
 			{
 				Beatmap? beatmap = r.Result;
 				if (beatmap == null)
 					return EntitlementsStatus.NotOwned;
-				return EntitlementsStatus.NotDownloaded;
+
+				BeatmapVersion beatmapVersion = beatmap.Versions.First(x => x.Hash == levelHash);
+				string[] requirements = beatmapVersion.Difficulties
+					.Aggregate(Array.Empty<string>(), (a, n) => a
+						.Append(n.Chroma ? "Chroma" : "")
+						.Append(n.MappingExtensions ? "Mapping Extensions" : "")
+						.Append(n.NoodleExtensions ? "Noodle Extensions" : "")
+						.ToArray()); // Damn this looks really cringe
+
+				bool hasRequirements = requirements.All(x => SongCore.Collections.capabilities.Contains(x));
+				return hasRequirements ? EntitlementsStatus.NotDownloaded : EntitlementsStatus.NotOwned;
 			});
 		}
 

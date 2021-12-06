@@ -25,6 +25,7 @@ namespace MultiplayerExtensions.Core.Installers
             Container.Bind<MpexLevelDownloader>().ToSelf().AsSingle();
             Container.Bind<MpexBeatmapLevelProvider>().ToSelf().AsSingle();
             Container.BindInterfacesAndSelfTo<CustomLevelsPatcher>().AsSingle();
+            Container.BindInterfacesAndSelfTo<NetworkConfigPatcher>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerCountPatcher>().AsSingle();
             Container.BindInterfacesAndSelfTo<LoggingPatcher>().AsSingle();
             Container.Bind<BGNetLogger>().ToSelf().AsSingle();

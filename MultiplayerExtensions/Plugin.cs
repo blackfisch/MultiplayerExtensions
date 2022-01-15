@@ -54,9 +54,9 @@ namespace MultiplayerExtensions
             Log = logger;
             Config = conf.Generated<PluginConfig>();
 
-            zenjector.OnApp<MPCoreInstaller>();
-            zenjector.OnMenu<MPMenuInstaller>();
-            zenjector.OnGame<MPGameInstaller>().OnlyForMultiplayer();
+            zenjector.Install<MPCoreInstaller>(Location.App);
+            zenjector.Install<MPCoreInstaller>(Location.Menu);
+            zenjector.Install<MPCoreInstaller>(Location.MultiplayerCore);
 
             BeatSaverOptions options = new BeatSaverOptions("MultiplayerExtensions", new Version(pluginMetadata.Version.ToString()));
             options.Timeout = TimeSpan.FromMinutes(1);

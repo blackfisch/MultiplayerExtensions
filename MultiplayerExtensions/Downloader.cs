@@ -77,8 +77,7 @@ namespace MultiplayerExtensions
                 try
                 {
                     SongCore.Loader.SongsLoadedEvent += awaiter.OnEvent;
-
-                    SongCore.Collections.AddSong($"custom_level_{hash}", folderPath);
+                    SongCore.Collections.AddSeperateSongFolder($"custom_level_{hash}", folderPath, SongCore.Data.FolderLevelPack.CustomLevels);
                     SongCore.Loader.Instance.RefreshSongs(false);
                     await awaiter.Task;
                     Plugin.DebugLog("SongCore has finished refreshing");
